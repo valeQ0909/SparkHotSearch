@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="pageheader">
-            <h1>Spark热搜项目</h1>
+            <h1>Spark热搜实时动态大屏</h1>
         </div>
     </div>
 </template>

@@ -18,20 +18,16 @@ public class TestServiceImpl implements TestService {
     private NewscountMapper newscountMapper;
     @Override
     public JSONObject testService() {
-        System.out.println("<<pojo");
-        System.out.println(newscountMapper);
-        System.out.println("pojo>>");
         QueryWrapper<Newscount> queryWrapper = new QueryWrapper<Newscount>();
-//      queryWrapper.select("sum(count) as counted").groupBy("name");
+        // 在spark阶段已经分组求和过了
         queryWrapper.groupBy("name");
         queryWrapper.orderByDesc("count");
+        // 每次返回8条数据
         queryWrapper.last("limit 8");
+
         //查到所有结果后先分组，再求和，最后将结果返回
         List<Newscount> newscounts = newscountMapper.selectList(queryWrapper);
 
-//        System.out.println("hahahah");
-//        System.out.println(newscounts);
-//        System.out.println("执行完毕");
         List<JSONObject> data = new LinkedList<JSONObject>();
         JSONObject resp = new JSONObject();
         for(Newscount newscount: newscounts){

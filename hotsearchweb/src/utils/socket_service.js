@@ -49,25 +49,28 @@ export default class SocketService{
 
         //接收数据
         this.ws.onmessage = msg =>{
-            // console.log("message: ", msg.data)
-            // const recvData = JSON.parse(msg.data)
-            // const socketType = recvData.socketType
-            // //判断回调函数是否存在
-            // if(this.callBackMapping[socketType]){
-            //     const action = recvData.action
-            //     if(action === 'getData'){
-            //         const realData = JSON.parse(recvData.data)
-            //         this.callBackMapping[socketType].call(this, realData)
-            //     } else if(action === 'fullScreen'){
 
-            //     } else if(action === 'themeChange'){
-
-            //     }
-            // }
-
+            console.log("msg: ", msg)
             const chartData = JSON.parse(msg.data)
-            this.callBackMapping["trendData"].call(this, chartData)
 
+            if(this.callBackMapping["trendData"]){
+                this.callBackMapping["trendData"].call(this, chartData)
+            }
+            if(this.callBackMapping["trendDataAge"]){
+                this.callBackMapping["trendDataAge"].call(this, chartData)
+            }
+            if(this.callBackMapping["trendDataSex"]){
+                this.callBackMapping["trendDataSex"].call(this, chartData)
+            }
+            if(this.callBackMapping["trendDataProvince"]){
+                this.callBackMapping["trendDataProvince"].call(this, chartData)
+            }
+            if(this.callBackMapping["trendDataNews"]){
+                this.callBackMapping["trendDataNews"].call(this, chartData)
+            }
+            if(this.callBackMapping["trendDataWorld"]){
+                this.callBackMapping["trendDataWorld"].call(this, chartData)
+            }
         }
 
     }

@@ -1,15 +1,14 @@
 <template>
     <div>
-        <h2>图表1</h2>
-        <div class="chart" id="oneChart">
-            图表的容器
+        <h2>实时热搜榜</h2>
+        <div class="chart" id="Chart1">
         </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios';
-import {inject, onMounted, reactive, onUnmounted} from 'vue'
+import {inject, onMounted, reactive, onUnmounted} from 'vue';
+
 export default{
     setup(){
         let $echarts = inject("echarts")
@@ -18,16 +17,15 @@ export default{
         let xdata = reactive([])
         let ydata = reactive([])
         let myChart = null
-
-        let mapData = reactive({});
-
     
         //ret是服务端发送给客户端的图表的数据
-        function getData(ret){        
-            xdata = ret.mydata.map(v=>v.name)
-            ydata = ret.mydata.map(v=>v.count)
-            console.log("ret: ", ret)
-            updateChart()
+        function getData(ret){
+            if(ret.news){
+                console.log("newsRet: ", ret)
+                xdata = ret.news.map(v=>v.name)
+                ydata = ret.news.map(v=>v.count)
+                updateChart()
+            }
         }
 
         const updateChart = () => myChart.setOption({
@@ -89,21 +87,15 @@ export default{
             
         })
 
-        async function getState(){
-            mapData = await axios.get("http://localhost:8080/map/china.json")
-            console.log("hhhhh")
-        }
-
+        
         onMounted(()=>{
-          myChart = $echarts.init(document.getElementById("oneChart"))
-          $socket.registerCallBack('trendData', getData)     
-
-          
+          $socket.registerCallBack('trendDataNews', getData)
+          myChart = $echarts.init(document.getElementById("Chart1"))
           
         })
 
         onUnmounted(() =>{
-            this.$socket.unRegisterCallBack("trendData")
+            this.$socket.unRegisterCallBack("trendDataNews")
         })
 
 
@@ -113,8 +105,6 @@ export default{
             xdata,
             ydata,
             myChart,
-            getState,
-            mapData,
         }
     }
 }
